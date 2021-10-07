@@ -95,6 +95,15 @@ set -uo pipefail
   {% if repo.src is defined and repo.src != None and (repo.src|length>0)  %}{{ repo.src }}{% else %}{{ repo.stdin_filename }}{% endif %}
 {%- endmacro %}
 {#
+  Define process_nice
+#}
+{% macro process_nice(item) -%}
+  {% if item.process is defined and item.process != None %}
+    {%- if item.process.nice is defined and item.process.nice != None -%}nice -n {{ item.process.nice }} {% endif %}
+    {%- if item.process.ionice is defined and item.process.ionice != None -%}ionice -n {{ item.process.ionice }}{% endif %} \
+  {%- endif %}
+{%- endmacro %}
+{#
   Define exclude macro
 #}
 {% macro exclude(exclude) -%}
@@ -171,6 +180,7 @@ printf "\n\n################## backup command ##################\n"
     MODE_TAG="--tag cron"
   fi
 
+  {{ process_nice(item)}}
   {% if item.stdin is defined and item.stdin == true %}
   {{ item.stdin_cmd }} | {{ restic_install_path }}/restic backup \
   --stdin $MODE_TAG \
@@ -210,6 +220,7 @@ fi
 if [[ "$STATUS" = "NO_ERROR" ]]
 then
 printf "\n\n################## forget command ##################\n"
+  {{process_nice(item)}}
   {{ restic_install_path }}/restic forget {{ path_attribute(item) }}\
   {{ retention_pattern(item) }}
   {% if item.prune is defined and item.prune == true %}
