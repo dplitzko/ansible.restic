@@ -30,7 +30,7 @@ STATUS="NO_ERROR"
 set -uo pipefail
 
 {#
-  override the default cache location
+  override the default cache location for this backup
 #}
 {% if item.cache_location is defined %}
 export RESTIC_CACHE_DIR={{ item.cache_location }}

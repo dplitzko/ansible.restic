@@ -3,6 +3,12 @@
 # Backup credentials for {{ item.src|default('stdin') }}
 # Source this file to work with restic on this host
 
+{#
+  override the default cache location (can be overriden individual for each backup)
+#}
+{% if restic_repos[item.repo].cache_location is defined %}
+export RESTIC_CACHE_DIR={{ restic_repos[item.repo].cache_location }}
+{% endif %}
 export RESTIC_REPOSITORY={{ restic_repos[item.repo].location }}
 export RESTIC_PASSWORD='{{ restic_repos[item.repo].password | regex_replace('\'', '\'\\\'\'') }}'
 {% if restic_repos[item.repo].aws_access_key is defined %}
