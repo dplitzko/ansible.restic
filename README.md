@@ -75,6 +75,7 @@ ansible-galaxy install arillso.restic
 | `restic_create_cron`   | `false`                             | Should a cronjob be created for each backup                                 |
 | `restic_dir_owner`     | `'{{ansible_user}}'`                | The owner of all created dirs                                               |
 | `restic_dir_group`     | `'{{ansible_user}}'`                | The group of all created dirs                                               |
+| `cache_location`   |    no     | Allows you to override the default cache location.                                                      |
 
 ### Repos
 Restic stores data in repositories. You have to specify at least one repository
@@ -149,7 +150,6 @@ Available variables:
 | `schedule_month`   |           no (`*`)            | Month when the job is run. ( 1-12, *, */2, etc )                                                                                                                             |
 | `disable_logging`          |           no (`false`)           | Allows you to enable/disable the logging.                                                                                            |
 | `max_result_log_size`          |           no (`500000`)           | Allows you to specify max result log file size. Default deletes the result log file if it is bigger than 500 KB.                                                                                            |
-| `cache_location`   |           no          | Allows you to override the default cache location.                                                                                            
 | `exclude`          |           no (`{}`)           | Allows you to specify files to exclude. See [Exclude](#exclude) for reference.                                                                                               |
 
 Example:
