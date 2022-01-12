@@ -107,8 +107,8 @@ set -uo pipefail
   Define exclude macro
 #}
 {% macro exclude(exclude) -%}
-    {% if exclude.exclude_cache is defined and exclude.exclude_cache == true %}
-  --exclude-cache \
+    {% if exclude.exclude_caches is defined and exclude.exclude_caches == true %}
+  --exclude-caches \
     {% endif %}
     {% if exclude.exclude is defined %}
         {% for path in exclude.exclude %}
