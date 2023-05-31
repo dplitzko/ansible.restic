@@ -19,6 +19,9 @@
 {% endif %}
 # go garbage collector optimized
 export GOGC=20
+{% if item.cpu_cores is defined %}
+export GOMAXPROCS={{item.cpu_cores}}
+{% endif %}
 
 {#
   Include access file
@@ -186,6 +189,7 @@ printf "\n\n################## backup command ##################\n"
   {{ process_nice(item)}}
   {% if item.stdin is defined and item.stdin == true %}
   {{ item.stdin_cmd }} | {{ restic_install_path }}/restic backup \
+  --no-scan \
   --stdin $MODE_TAG \
   {{ tags(item.tags) }} \
   {{ stdin_filename(item.stdin_filename) }} \
@@ -195,6 +199,7 @@ printf "\n\n################## backup command ##################\n"
   $@ \
   {% else %}
   {{ restic_install_path }}/restic backup {{ backup_src_list(item) }}\
+  --no-scan \
   $MODE_TAG \
   {% if item.tags is defined %}
   {{ tags(item.tags) }} \
