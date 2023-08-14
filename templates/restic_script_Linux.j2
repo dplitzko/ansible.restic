@@ -161,11 +161,13 @@ fi
 # before script 
 printf "\n\n################## before script ##################\n"
 bash {{ restic_script_dir }}/{{ item.name }}-backup/before.sh |& tee {{ before_output_log }}
-if [ $? -eq 0 ]
+
+exit_code=$?
+if [ $exit_code -eq 0 ]
 then
-    echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') before script:\t OK" >> {{ result_log }}
+    echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') before script:\t OK ($exit_code)" >> {{ result_log }}
 else
-    echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') before script:\t ERROR" >> {{ result_log }}
+    echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') before script:\t ERROR ($exit_code)" >> {{ result_log }}
     STATUS="BEFORE_SCRIPT_FAILED"
 fi
 
@@ -212,11 +214,12 @@ printf "\n\n################## backup command ##################\n"
   {% endif %}
   |& tee {{ backup_output_log }}
 
-  if [ $? -eq 0 ]
+  exit_code=$?
+  if [ $exit_code -eq 0 ]
   then
-      echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') backup command:\t OK" >> {{ result_log }}
+      echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') backup command:\t OK ($exit_code)" >> {{ result_log }}
   else
-      echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') backup command:\t ERROR" >> {{ result_log }}
+      echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') backup command:\t ERROR ($exit_code)" >> {{ result_log }}
       STATUS="BACKUP_FAILED"
   fi
 fi
@@ -235,11 +238,13 @@ printf "\n\n################## forget command ##################\n"
   --prune \
   {% endif %}
   |& tee {{ forget_output_log }}
-  if [ $? -eq 0 ]
+  
+  exit_code=$?
+  if [ $exit_code -eq 0 ]
   then
-      echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') forget command:\t OK" >> {{ result_log }}
+      echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') forget command:\t OK ($exit_code)" >> {{ result_log }}
   else
-      echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') forget command:\t ERROR" >> {{ result_log }}
+      echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') forget command:\t ERROR ($exit_code)" >> {{ result_log }}
       STATUS="FORGET_FAILED"
   fi
 fi
@@ -260,11 +265,13 @@ echo -e "$STATUS" |& tee {{ state_log }}
 # notify script 
 printf "\n\n################## notify script ##################\n"
 bash {{ restic_script_dir }}/{{ item.name }}-backup/notify.sh $STATUS |& tee {{ notify_output_log }}
-if [ $? -eq 0 ]
+
+exit_code=$?
+if [ $exit_code -eq 0 ]
 then
-    echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') notify script:\t OK" >> {{ result_log }}
+    echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') notify script:\t OK ($exit_code)" >> {{ result_log }}
 else
-    echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') notify script:\t ERROR" >> {{ result_log }}
+    echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') notify script:\t ERROR ($exit_code)" >> {{ result_log }}
 fi
 {% endif %}
 
