@@ -267,7 +267,7 @@ printf "\n\n################## notify script ##################\n"
 bash {{ restic_script_dir }}/{{ item.name }}-backup/notify.sh $STATUS |& tee {{ notify_output_log }}
 
 exit_code=$?
-if [ $exit_code -eq 0 ]
+if [ $exit_code -eq 0 ] || [ $exit_code -eq 3 ]
 then
     echo -e "$(date -u '+%Y-%m-%d %H:%M:%S') notify script:\t OK ($exit_code)" >> {{ result_log }}
 else
