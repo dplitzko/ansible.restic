@@ -62,7 +62,7 @@
     - item.repo in restic_repos
 
 - name: zabbix notification
-  include_taks: '../zabbix.yml'
+  include_tasks: '../zabbix.yml'
   with_items: '{{ restic_backups }}'
   no_log: true
   when:
